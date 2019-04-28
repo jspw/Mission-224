@@ -178,7 +178,7 @@ public class ViewManager {
         logo.setLayoutY(-160);
         logo.setEffect(new DropShadow());
 
-        /*logo.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        logo.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 logo.setEffect(new DropShadow());
@@ -190,7 +190,7 @@ public class ViewManager {
             public void handle(MouseEvent event) {
                 logo.setEffect(null);
             }
-        });*/
+        });
 
         mainPane.getChildren().add(logo);
     }
