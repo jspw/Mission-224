@@ -1,0 +1,159 @@
+
+Player.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+1_terrorist_1_Idle
+  rotate: false
+  xy: 0, 23
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 0
+1_terrorist_1_Idle
+  rotate: false
+  xy: 50, 23
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 1
+1_terrorist_1_Idle
+  rotate: false
+  xy: 100, 23
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 2
+1_terrorist_1_Idle
+  rotate: false
+  xy: 150, 23
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 3
+1_terrorist_1_Idle
+  rotate: false
+  xy: 200, 23
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 4
+1_terrorist_1_Idle
+  rotate: false
+  xy: 250, 23
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 5
+1_terrorist_1_Idle
+  rotate: false
+  xy: 300, 23
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 6
+1_terrorist_1_Idle
+  rotate: false
+  xy: 350, 23
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 7
+1_terrorist_1_Jump
+  rotate: false
+  xy: 400, 0
+  size: 50, 133
+  orig: 50, 133
+  offset: 0, 0
+  index: 0
+1_terrorist_1_Jump
+  rotate: false
+  xy: 450, 0
+  size: 50, 133
+  orig: 50, 133
+  offset: 0, 0
+  index: 1
+1_terrorist_1_Jump
+  rotate: false
+  xy: 500, 0
+  size: 50, 133
+  orig: 50, 133
+  offset: 0, 0
+  index: 2
+1_terrorist_1_Jump
+  rotate: false
+  xy: 550, 0
+  size: 50, 133
+  orig: 50, 133
+  offset: 0, 0
+  index: 3
+1_terrorist_1_Jump
+  rotate: false
+  xy: 600, 0
+  size: 50, 133
+  orig: 50, 133
+  offset: 0, 0
+  index: 4
+1_terrorist_1_Jump
+  rotate: false
+  xy: 650, 0
+  size: 50, 133
+  orig: 50, 133
+  offset: 0, 0
+  index: 5
+1_terrorist_1_Jump
+  rotate: false
+  xy: 700, 0
+  size: 50, 133
+  orig: 50, 133
+  offset: 0, 0
+  index: 6
+1_terrorist_1_Jump
+  rotate: false
+  xy: 750, 0
+  size: 50, 133
+  orig: 50, 133
+  offset: 0, 0
+  index: 7
+1_terrorist_1_Run
+  rotate: false
+  xy: 800, 40
+  size: 50, 93
+  orig: 50, 93
+  offset: 0, 0
+  index: 0
+1_terrorist_1_Run
+  rotate: false
+  xy: 850, 40
+  size: 50, 93
+  orig: 50, 93
+  offset: 0, 0
+  index: 1
+1_terrorist_1_Run
+  rotate: false
+  xy: 900, 40
+  size: 50, 93
+  orig: 50, 93
+  offset: 0, 0
+  index: 2
+1_terrorist_1_Run
+  rotate: false
+  xy: 950, 40
+  size: 50, 93
+  orig: 50, 93
+  offset: 0, 0
+  index: 3
+1_terrorist_1_Run
+  rotate: false
+  xy: 1000, 40
+  size: 50, 93
+  orig: 50, 93
+  offset: 0, 0
+  index: 4
+1_terrorist_1_Run
+  rotate: false
+  xy: 1050, 40
+  size: 50, 93
+  orig: 50, 93
+  offset: 0, 0
+  index: 5
