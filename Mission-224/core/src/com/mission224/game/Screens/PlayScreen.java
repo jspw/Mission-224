@@ -3,6 +3,7 @@ package com.mission224.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,13 +16,15 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mission224.game.Main;
 import com.mission224.game.Scenes.Hud;
+import com.mission224.game.Sprites.Bullets;
+import com.mission224.game.Sprites.Enemies.Enemy;
 import com.mission224.game.Sprites.Player;
 import com.mission224.game.Tools.B2WorldCreator;
 import com.mission224.game.Tools.WorldContactListener;
 
-
 public class PlayScreen implements Screen {
 
+    // Screen Variables
     private Main game;
     private OrthographicCamera gameCam;
     private Hud hud;
@@ -35,21 +38,31 @@ public class PlayScreen implements Screen {
     // Box2D variables
     private World world;
     private Box2DDebugRenderer b2dr;
+	private B2WorldCreator creator;
 
-    // Creating player
+    // Player variables
     private Player player;
     private TextureAtlas atlas;
+    public static boolean canJump;
 
+
+    // Music Variables
+    public static  Music music;
+
+    // Project Path
     private String projectDir = System.getProperty("user.dir") + "/";
+
 
     public PlayScreen(Main game) {
 
-        atlas = new TextureAtlas("PlayerFiles/Player.pack");
+        atlas = new TextureAtlas("CharactersFiles/Player.pack");
 
         this.game = game;
         gameCam = new OrthographicCamera(Main.V_WIDTH, Main.V_HEIGHT);
         gamePort = new FitViewport(Main.V_WIDTH / Main.PPM, Main.V_HEIGHT / Main.PPM, gameCam);
         hud = new Hud(game.batch);
+
+        canJump = true;
 
         // Map Loader:
         mapLoader = new TmxMapLoader();
@@ -57,20 +70,25 @@ public class PlayScreen implements Screen {
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1/ Main.PPM);
 
         // GameCam centralized
-        gameCam.position.set(gamePort.getWorldWidth()/2, gamePort.getWorldHeight()/2, 0);
+        gameCam.position.set(gamePort.getWorldWidth()/2 + 0.25f, gamePort.getWorldHeight()/2, 0);
 
-        // Box2D intialization
+        // Box2D initialization
         world = new World(new Vector2(0, -10), true);
         b2dr =  new Box2DDebugRenderer();
 
         // Creating world
-        new B2WorldCreator(world, map);
+        creator = new B2WorldCreator(this);
 
         // Creating player in the game World
-        player = new Player(world, this);
+        player = new Player(this);
 
-        // After efects of collision ditaction
+        // After effects of collision detection
         world.setContactListener(new WorldContactListener());
+
+        // Adding Background Music
+        music = Main.manager.get("Audio/Musics/Background_music_for_level_1.mp3", Music.class);
+        music.setLooping(true);
+        //music.play();
     }
 
     public TextureAtlas getAtlas() {
@@ -82,8 +100,9 @@ public class PlayScreen implements Screen {
 
     }
 
-    // Handeling user Inputs
+    // Handling User Inputs
     public void handleInput(float dt) {
+
         /*if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
             gameCam.position.x += 100 * dt;
 
@@ -103,35 +122,58 @@ public class PlayScreen implements Screen {
                 player.b2body.applyLinearImpulse(new Vector2(0.1f ,0), player.b2body.getWorldCenter(), true);
         }*/
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player.b2body.applyLinearImpulse(new Vector2(0 ,4f), player.b2body.getWorldCenter(), true);
+        // Jump
+        if((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) && canJump) {
+            player.b2body.applyLinearImpulse(new Vector2(0 ,5f), player.b2body.getWorldCenter(), true);
+            canJump = false;
         }
 
-//        if(Gdx.input.isKeyPressed(Input.Keys.S)){
-//            player.b2body.applyLinearImpulse(new Vector2(0 ,-10f),player.b2body.getWorldCenter(),true);
-//        }
-//
+        // Right
         if((Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) && player.b2body.getLinearVelocity().x >= -2){
             player.b2body.applyLinearImpulse(new Vector2(-1f ,0), player.b2body.getWorldCenter(), true);
         }
 
+        // Left
         if((Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && player.b2body.getLinearVelocity().x <= 2){
             player.b2body.applyLinearImpulse(new Vector2(1f ,0), player.b2body.getWorldCenter(), true);
         }
+
+        // Bullets
+        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            float bulletX = player.b2body.getPosition().x;
+            float bulletY = player.b2body.getPosition().y;
+
+            if(player.runningRight) bulletX += .5f;
+            else bulletX -= .3f;
+
+            player.bullets.add(new Bullets(this, bulletX, bulletY, player.runningRight));
+        }
     }
 
+
+
     public void update(float dt) {
+
         // Handle user input
         handleInput(dt);
 
         // Updating bodies to the world
-        world.step(1/60f, 6, 2);
+        world.step(1 / 60f, 6, 2);
 
         // Update Player Position
         player.update(dt);
 
+
+        for(Enemy enemy:creator.getSmallFries1Array())
+            enemy.update(dt);
+
+        // Hud Update
+        hud.update(dt);
+
         // Attach gameCam to the Player co-ordinate
-        gameCam.position.x = player.b2body.getPosition().x;
+        if(player.b2body.getPosition().x > 5f && player.b2body.getPosition().x < 74f)
+            gameCam.position.x = player.b2body.getPosition().x;
+        //System.out.println(player.b2body.getPosition().x);
 
         gameCam.update();
         mapRenderer.setView(gameCam);
@@ -145,17 +187,30 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+
         // Map Render
         mapRenderer.render();
 
         // Box2DDebug Render
         b2dr.render(world, gameCam.combined);
 
-        // Player Render
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
 
+	    // Rendering Player
         player.draw(game.batch);
+
+        // Rendering Bullets
+        for (Bullets bullet : player.bullets) {
+            bullet.draw(game.batch);
+        }
+
+        // Rendering Enemies
+        for(Enemy enemy : creator.getSmallFries1Array()) {
+            enemy.draw(game.batch);
+            if(enemy.getX() < player.getX() + 1600 / Main.PPM)
+                enemy.b2body.setActive(true);
+        }
 
         game.batch.end();
 
@@ -167,6 +222,15 @@ public class PlayScreen implements Screen {
     public void resize(int width, int height) {
         gamePort.update(width, height);
     }
+
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
 
     @Override
     public void pause() {
@@ -190,5 +254,6 @@ public class PlayScreen implements Screen {
         b2dr.dispose();
         world.dispose();
         hud.stage.dispose();
+        music.dispose();
     }
 }

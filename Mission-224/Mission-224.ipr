@@ -168,6 +168,13 @@
       </item>
     </group>
   </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="shahr">
+      <words>
+        <w>ditection</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Mission-224.iml" filepath="$PROJECT_DIR$/Mission-224.iml" />
@@ -180,9 +187,6 @@
   </component>
   <component name="SvnBranchConfigurationManager">
     <option name="mySupportsUserInfoFilter" value="true" />
-  </component>
-  <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
   </component>
   <component name="masterDetails">
     <states>
