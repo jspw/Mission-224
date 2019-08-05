@@ -15,14 +15,13 @@ public class B2WorldCreator {
 
     // SmallFries Arrays
     private Array<SmallFries1> smallFries1Array;
-
     public Array<SmallFries1> getSmallFries1Array() {
         return smallFries1Array;
     }
 
     public B2WorldCreator(PlayScreen screen) {
 
-        // Intializing
+        // Initializing
         TiledMap map = screen.getMap();
 
         // Creating Traps
@@ -51,10 +50,10 @@ public class B2WorldCreator {
         // Enemy detection Area
         for(MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new EnemyDitactionArea(screen, rect);
+            new EnemyDetectionArea(screen, rect);
         }
 
-        // Enemy Area added
+        // Enemies are added
         smallFries1Array = new Array<SmallFries1>();
         for(MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();

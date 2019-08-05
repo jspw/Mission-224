@@ -13,20 +13,22 @@ public abstract class Enemy extends Sprite {
     public Body b2body;
     protected Vector2 velocity;
 
-    public Enemy(PlayScreen screen, float x, float y) {
+    protected Enemy(PlayScreen screen, float x, float y) {
         this.world = screen.getWorld();
         this.screen = screen;
         setPosition(x, y);
         defineEnemy();
-        velocity = new Vector2(1, 0);
-        b2body.setActive(false);
+        velocity = new Vector2(0.75f, 0);
+        //b2body.setActive(false);
     }
 
     protected abstract void defineEnemy();
     public abstract void update(float dt);
     public abstract void enemyBulletHit();
+    public abstract boolean dead();
+    public abstract boolean isDetect();
 
-    public void reverseVelocity(boolean x, boolean y) {
+    public void reverseVelocity(boolean x, boolean y) throws NullPointerException {
         if(x)
             velocity.x = -velocity.x;
         if(y)

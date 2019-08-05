@@ -1,0 +1,68 @@
+
+Enemy_Dying.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+3_police_Hurt
+  rotate: false
+  xy: 0, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 0
+3_police_Hurt
+  rotate: false
+  xy: 104, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 1
+3_police_Hurt
+  rotate: false
+  xy: 208, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 2
+3_police_Hurt
+  rotate: false
+  xy: 312, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 3
+3_police_Hurt
+  rotate: false
+  xy: 416, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 4
+3_police_Hurt
+  rotate: false
+  xy: 520, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 5
+3_police_Hurt
+  rotate: false
+  xy: 624, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 6
+3_police_Hurt
+  rotate: false
+  xy: 728, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 7
+3_police_Hurt
+  rotate: false
+  xy: 832, 0
+  size: 104, 115
+  orig: 104, 115
+  offset: 0, 0
+  index: 8

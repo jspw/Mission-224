@@ -7,11 +7,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mission224.game.Scenes.Hud;
 import com.mission224.game.Screens.Menu;
 import com.mission224.game.Screens.PlayScreen;
+import com.mission224.game.Sprites.Player;
 
 public class Main extends Game {
-
 
 	public static final int V_WIDTH = 1000;
 	public static final int V_HEIGHT = 600;
@@ -26,8 +27,7 @@ public class Main extends Game {
 	public static final short OBJECT_BIT = 32;
 	public static final short PLAYER_DETECTION_BIT = 64;
 	public static final short BULLET_BIT = 128;
-
-	public static boolean pause = false;
+	public static final short ENEMY_BULLET_BIT = 256;
 
 	public static SpriteBatch batch;
 	public static AssetManager manager;
@@ -35,60 +35,40 @@ public class Main extends Game {
 	// Create Main World
 	@Override
 	public void create () {
+
 		batch = new SpriteBatch();
 
-		// Load the assests
+		// Load the Assets
 		manager = new AssetManager();
 		manager.load("Audio/Musics/Background_music_for_level_1.mp3", Music.class);
 		manager.load("Audio/SoundEffects/Hurt.wav", Sound.class);
+		manager.load("Audio/SoundEffects/gun.wav", Sound.class);
 		manager.finishLoading();
 
-		//Create Menu
+		// Create Menu
 		setScreen(new Menu(this));
 	}
 
 	// Main Loop:
 	@Override
 	public void render () {
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ) {
-			pause = true;
-			Menu.play= false;
-			Menu.help=false;
-			Menu.mission=false;
-			Menu.credit=false;
-			System.out.println("Escape");
-
-	//		if(Menu.pause) PlayScreen.music.dispose();
-
-			//create menu
-			setScreen(new Menu(this));
-		}
-
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ) {
-			pause = false;
-			Menu.play= false;
-			Menu.help=false;
-			Menu.mission=false;
-			Menu.credit=false;
-			System.out.println("Game on");
-
+		// Create Menu
+		if(PlayScreen.playAgain || Hud.worldTimer <= 0){
+			Hud.worldTimer = 300;
+			Menu.play = false;
+			Menu.help = false;
+			Menu.mission = false;
+			Menu.credit = false;
+			PlayScreen.playAgain = false;
 		}
 
 		super.render();
 	}
 
-
-
-	public SpriteBatch getBatch() {
-
-		return this.batch;
-	}
-
 	@Override
 	public void dispose () {
-super.dispose();
+		super.dispose();
 		batch.dispose();
 		manager.dispose();
-
 	}
 }

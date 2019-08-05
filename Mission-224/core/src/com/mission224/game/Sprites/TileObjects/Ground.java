@@ -1,6 +1,5 @@
 package com.mission224.game.Sprites.TileObjects;
 
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mission224.game.Main;
@@ -8,12 +7,8 @@ import com.mission224.game.Screens.PlayScreen;
 
 public class Ground {
 
-    protected TiledMap map;
-    protected Body body;
-
-
     public Ground(PlayScreen screen, Rectangle bounds) {
-        // Intializing
+        // Initializing
         World world = screen.getWorld();
 
         BodyDef bdef = new BodyDef();
@@ -23,7 +18,7 @@ public class Ground {
         bdef.type = BodyDef.BodyType.StaticBody;
         bdef.position.set((bounds.getX() + bounds.getWidth()/2) / Main.PPM, (bounds.getY() + bounds.getHeight()/2) / Main.PPM);
 
-        body = world.createBody(bdef);
+        Body body = world.createBody(bdef);
 
         shape.setAsBox((bounds.getWidth()/2) / Main.PPM, (bounds.getHeight()/2) / Main.PPM);
         fdef.shape = shape;

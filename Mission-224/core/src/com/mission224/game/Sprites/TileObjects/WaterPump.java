@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.mission224.game.Main;
 import com.mission224.game.Screens.PlayScreen;
+import com.mission224.game.Sprites.Enemies.SmallFries1;
 
 public class WaterPump extends InteractiveTileObject {
 
@@ -16,5 +17,6 @@ public class WaterPump extends InteractiveTileObject {
     @Override
     public void onSideHit() {
         Gdx.app.log("WaterPump", "Collision");
+        SmallFries1.playerEnemyCollision = false;
     }
 }

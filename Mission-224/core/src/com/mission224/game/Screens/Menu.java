@@ -10,56 +10,55 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mission224.game.Main;
 
 import static com.badlogic.gdx.math.MathUtils.random;
-import static java.lang.System.exit;
-
 
 public class Menu implements Screen {
 
 	private Main game;
-
 	private Texture bg;
 	private Texture p1;
 	private Texture buttonTex;
 	private Texture effect;
 	private Texture pane ;
+	private Texture fb;
+	private Animation animation;
 
+	public static boolean play;
+	public static boolean mission;
+	public static boolean help;
+	public static boolean credit;
+	private static boolean exit;
+	private float elapsedTime;
+	private int bal;
+	private int x, y, timer;
 
+	private Label label, label2, label3, label4, label5;
+	private Label helpPanel, missionPanel, creditPanel;
 
-
-	public static boolean play = false;
-	public static boolean mission = false;
-	public static boolean help = false;
-	public static boolean credit = false;
-	public static boolean exit = false;
-	public static boolean pause=false;
-
-
-
-	private TextureAtlas atlas;
-	private Animation anim ;
-	private float elaspedTime = 0f;
-	int bal=1;
-	int x=600,y=280;
-
-
-	private TextureAtlas panelAtlas;
+	/*private TextureAtlas panelAtlas;
 	private Animation panelAnimation;
 	private float paneTime = 0f;
 	int paneX=800;
-	int paneY=80;
+	int paneY=80;*/
 
-	private Label label,label2,label3,label4,label5;
-	private  Label helpPanel,missionPanel,creditPanel;
+	public Menu(Main game) {
 
-
-
-	public Menu(Main game){
-
+		// Initialization
 		this.game = game;
+		elapsedTime = 0;
+		timer = 0;
+		x = 600;
+		y = 280;
+		bal = 1;
+		play = false;
+		credit = false;
+		exit = false;
+		mission = false;
+		help = false;
 
 		bg = new Texture("Menu/background.jpg");
 		p1 = new Texture("Menu/NewLogo.png");
@@ -67,37 +66,50 @@ public class Menu implements Screen {
 		pane = new Texture("Menu/Buttons/Panel.png");
 		buttonTex = new Texture("Menu/Buttons/button.png");
 
+		// Facebook Logo
+		fb = new Texture("Menu/facebook.png");
 
-		//logo animation
-		atlas =  new TextureAtlas("Menu/logoA.atlas");
-		anim = new Animation(1/6f,atlas.getRegions());
+		// Logo animation
+		TextureAtlas atlas =  new TextureAtlas("Menu/logoA.atlas");
+		animation = new Animation<TextureRegion>(1/6f, atlas.getRegions());
 
-		//panel animation
+		/*// Panel animation
 		panelAtlas = new TextureAtlas("Menu/PanelAnimation/animationPanel.atlas");
-		panelAnimation = new Animation(1/60f,panelAtlas.getRegions());
+		panelAnimation = new Animation(1/60f,panelAtlas.getRegions());*/
 
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/Oswald-Regular.ttf"));
+		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		parameter.size = 30;
+		parameter.borderWidth = 1;
+		parameter.color = Color.LIGHT_GRAY;
+		parameter.shadowOffsetX = 3;
+		parameter.shadowOffsetY = 3;
+		parameter.shadowColor = new Color(0, 0f, 0, 1);
+		BitmapFont font = generator.generateFont(parameter);
+		generator.dispose();
 
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
-		BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/oswald-32.fnt"));
-
 		labelStyle.font = font;
-		labelStyle.fontColor = Color.BLACK;
 
-		label =new Label("PLAY", labelStyle);
-		label2 =new Label("MISSION", labelStyle);
-		label3 =new Label("HELP", labelStyle);
-		label4 =new Label("CREDIT", labelStyle);
-		label5 =new Label("EXIT", labelStyle);
+		/*Label.LabelStyle labelStyle = new Label.LabelStyle();
+		labelStyle.font = new BitmapFont(Gdx.files.internal("Fonts/oswald-32.fnt"));
+		labelStyle.fontColor = Color.BLUE;*/
 
-		helpPanel = new Label("A = Move Left\nD = Movie Right\nSPACE = Jump\nLEFT MOUSE = Shoot",labelStyle);
-		missionPanel = new Label("To be added",labelStyle);
-		creditPanel = new Label("niggas",labelStyle);
+		label = new Label("PLAY", labelStyle);
+		label2 = new Label("MISSION", labelStyle);
+		label3 = new Label("HELP", labelStyle);
+		label4 = new Label("CREDIT", labelStyle);
+		label5 = new Label("EXIT", labelStyle);
+
+		helpPanel = new Label("A or Left-Arrow  =  Move Left\nD or Right-Arrow  =  Movie Right\nSPACE or Up-Arrow  =  Jump\nLeft-Click  =  Shoot", labelStyle);
+		missionPanel = new Label("To be added", labelStyle);
+		creditPanel = new Label("Project of SWE-224 By\nShahriar Elahi Dhruvo\nReg No: 2017831060\n\nMehedi Hasan Shifat\nReg No: 2017831017", labelStyle);
 
 		label.setFontScale(1f,0.8f);
 		label2.setFontScale(1f,0.8f);
 		label3.setFontScale(1f,0.8f);
 		label4.setFontScale(1f,0.8f);
-
+		label5.setFontScale(1f, 0.8f);
 	}
 
 	@Override
@@ -111,142 +123,154 @@ public class Menu implements Screen {
 		Gdx.gl.glClearColor(0,0,0,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		elaspedTime += Gdx.graphics.getDeltaTime();
-		paneTime+=Gdx.graphics.getDeltaTime();
-		x+= random()%50;
-		y+=random()%50;
+		elapsedTime += Gdx.graphics.getDeltaTime();
+		//paneTime+=Gdx.graphics.getDeltaTime();
+		x += random()%50;
+		y += random()%50;
 
-		game.getBatch().begin();
+		Main.batch.begin();
 
-		game.getBatch().draw(bg,0,0);
+		Main.batch.draw(bg,0,0);
 
 		bal++;
-	//	System.out.println(bal);
-	    game.getBatch().draw((TextureRegion) anim.getKeyFrame(elaspedTime,false),x,y);
+	    Main.batch.draw((TextureRegion) animation.getKeyFrame(elapsedTime,false), x, y);
 	    if(bal >= 120){
+	    	// Draw Logo
+			Main.batch.draw(p1,300,100);
 
-	    	//Draw Logo
-			game.getBatch().draw(p1,300,100);
+		// Draw Buttons:
 
-			//Draw Buttons
-
-            //Play Button
-			game.getBatch().draw(buttonTex,50,400);
+            // Play Button
+			Main.batch.draw(buttonTex,50,400);
 			label.setPosition(95,402);
-            label.draw(game.getBatch(),1);
+            label.draw(Main.batch,1);
 
-            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX()>=50 && Gdx.input.getX()<=198 && Gdx.input.getY()>=155 && Gdx.input.getY()<=196){
-                game.getBatch().draw(effect,50,395);
+            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX() >= 50 && Gdx.input.getX() <= 198 && Gdx.input.getY() >= 155 && Gdx.input.getY() <= 196){
+                Main.batch.draw(effect,50,395);
 				label.setPosition(95,400);
-                label.draw(game.getBatch(),1);
+                label.draw(Main.batch,1);
 				play = true;
-				mission=false;
-				help=false;
-				exit=false;
-				credit=false;
-				pause=false;
+				mission = false;
+				help = false;
+				exit = false;
+				credit = false;
 
-                //create game screen
-				this.dispose();
+                // Create game screen
+				dispose();
 				game.setScreen(new PlayScreen(game));
-
 			}
-            //Missions button
-			game.getBatch().draw(buttonTex,50,320);
+
+            // Missions button
+			Main.batch.draw(buttonTex,50,320);
 			label2.setPosition(73,321);
-			label2.draw(game.getBatch(),1);
-			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX()>=50 && Gdx.input.getX()<=198 && Gdx.input.getY()>=235 && Gdx.input.getY()<=283){
-				game.getBatch().draw(effect,50,315);
+			label2.draw(Main.batch,1);
+			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX() >= 50 && Gdx.input.getX() <= 198 && Gdx.input.getY() >= 235 && Gdx.input.getY() <= 283){
+				Main.batch.draw(effect,50,315);
 				label2.setPosition(73,319);
-				label2.draw(game.getBatch(),1);
+				label2.draw(Main.batch,1);
 				mission = true;
 				play = false;
-				help=false;
-				exit=false;
-				credit=false;
-				paneX -=30;
+				help = false;
+				exit = false;
+				credit = false;
+				/*paneX -=30;
 				if(paneX<300) paneX=800;
-				game.getBatch().draw((TextureRegion) panelAnimation.getKeyFrame(paneTime,false),paneX,paneY);
+				game.getBatch().draw((TextureRegion) panelAnimation.getKeyFrame(paneTime,false),paneX,paneY);*/
 			}
-			//Help Button
-			game.getBatch().draw(buttonTex,50,240);
+
+			// Help button
+			Main.batch.draw(buttonTex,50,240);
 			label3.setPosition(95,241);
-			label3.draw(game.getBatch(),1);
-			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX()>=50 && Gdx.input.getX()<=198 && Gdx.input.getY()>=316 && Gdx.input.getY()<=356){
-				game.getBatch().draw(effect,50,235);
+			label3.draw(Main.batch,1);
+			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX() >= 50 && Gdx.input.getX() <= 198 && Gdx.input.getY() >= 316 && Gdx.input.getY() <= 356){
+				Main.batch.draw(effect,50,235);
 				label3.setPosition(95,240);
-				label3.draw(game.getBatch(),1);
+				label3.draw(Main.batch,1);
 				help = true;
 				play = false;
-				mission=false;
-				credit=false;
-				exit=false;
+				mission = false;
+				credit = false;
+				exit = false;
 			}
 
-			//Credit button
-			game.getBatch().draw(buttonTex,50,160);
+			// Credit button
+			Main.batch.draw(buttonTex,50,160);
 			label4.setPosition(85,161);
-			label4.draw(game.getBatch(),1);
-			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX()>=50 && Gdx.input.getX()<=198 && Gdx.input.getY()>=395 && Gdx.input.getY()<=435){
-				game.getBatch().draw(effect,50,155);
+			label4.draw(Main.batch,1);
+			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX() >= 50 && Gdx.input.getX() <= 198 && Gdx.input.getY() >= 395 && Gdx.input.getY() <= 435){
+				Main.batch.draw(effect,50,155);
 				label4.setPosition(85,160);
-				label4.draw(game.getBatch(),1);
+				label4.draw(Main.batch,1);
 				credit = true;
 				play = false;
-				mission=false;
-				help=false;
-				exit=false;
+				mission = false;
+				help = false;
+				exit = false;
 			}
-			//Exit button
-			game.getBatch().draw(buttonTex,50,80);
+
+			// Exit button
+			Main.batch.draw(buttonTex,50,80);
 			label5.setPosition(95,81);
-			label5.draw(game.getBatch(),1);
-			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX()>=50 && Gdx.input.getX()<=198 && Gdx.input.getY()>=475 && Gdx.input.getY()<=520){
-				game.getBatch().draw(effect,50,75);
+			label5.draw(Main.batch,1);
+			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX() >= 50 && Gdx.input.getX() <= 198 && Gdx.input.getY() >= 475 && Gdx.input.getY() <= 520){
+				Main.batch.draw(effect,50,75);
 				label5.setPosition(95,80);
-				label5.draw(game.getBatch(),1);
+				label5.draw(Main.batch,1);
 				exit = true;
 			}
-			//panel setup
+
+			// Panel setup
 			if(help){
-				game.getBatch().draw(pane,300,80);
-				helpPanel.setColor(Color.BLUE);
-				helpPanel.setFontScale(0.5f);
-				helpPanel.setPosition(307,80);
-				helpPanel.draw(game.getBatch(),1);
+				Main.batch.draw(pane,420,80);
+				helpPanel.setColor(Color.LIGHT_GRAY);
+				helpPanel.setFontScale(0.8f);
+				helpPanel.setPosition(500,120);
+				helpPanel.draw(Main.batch,1);
 			}
 			if(credit){
+				Main.batch.draw(pane,420,80);
+				creditPanel.setColor(Color.LIGHT_GRAY);
+				creditPanel.setFontScale(.8f);
+				creditPanel.setPosition(500,80);
+				creditPanel.draw(Main.batch,1);
 
-				game.getBatch().draw(pane,300,80);
-				helpPanel.setColor(Color.BLUE);
-				creditPanel.setPosition(300,80);
-				creditPanel.draw(game.getBatch(),1);
+				Main.batch.draw(fb,720,205);
+				Main.batch.draw(fb,720,110);
+				if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX()>=730 && Gdx.input.getX()<=760 && Gdx.input.getY()>=350 && Gdx.input.getY()<=386){
+					timer++;
+					if(timer > 10) {
+						Gdx.net.openURI("https://www.facebook.com/ShahriarDhruvo");
+						timer = 0;
+					}
+				}
+				else if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX()>=730 && Gdx.input.getX()<=760 && Gdx.input.getY()>=430 && Gdx.input.getY()<=480){
+					timer++;
+					if(timer > 10) {
+						Gdx.net.openURI("https://www.facebook.com/rio57mh");
+						timer = 0;
+					}
+				}
 			}
 			if(mission){
-				game.getBatch().draw(pane,300,80);
-				helpPanel.setColor(Color.BLUE);
-				missionPanel.setPosition(300,80);
-			//	missionPanel.draw(game.getBatch(),1);
+				Main.batch.draw(pane,420,80);
+				helpPanel.setColor(Color.LIGHT_GRAY);
+				missionPanel.setPosition(420,80);
+				missionPanel.draw(Main.batch,1);
 			}
         }
 
+		if(exit) Gdx.app.exit();
 
-	    if(exit) exit(0);
-
-		game.getBatch().end();
-
-		if(Menu.pause) PlayScreen.music.stop();
+		Main.batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 
-
 	}
 
 	@Override
 	public void pause() {
-
 
 	}
 
@@ -262,12 +286,11 @@ public class Menu implements Screen {
 
 	@Override
 	public void dispose() {
+		//System.out.println("yO MENU is working");
 		buttonTex.dispose();
 		bg.dispose();
 		p1.dispose();
 		effect.dispose();
 		pane.dispose();
-
-
 	}
 }

@@ -7,7 +7,6 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -18,16 +17,15 @@ public abstract class InteractiveTileObject {
 
     protected World world;
     protected TiledMap map;
-    protected TiledMapTile tile;
     protected Rectangle bounds;
     protected Body body;
     protected Fixture fixture;
 
-    private ChainShape shape;
     private BodyDef bdef;
     private FixtureDef fdef;
 
     public InteractiveTileObject(PlayScreen screen, Rectangle bounds) {
+
         this.world = screen.getWorld();
         this.map = screen.getMap();
         this.bounds = bounds;
@@ -48,9 +46,9 @@ public abstract class InteractiveTileObject {
     }
 
     public InteractiveTileObject(PlayScreen screen, MapObject object) {
-        // Intializing
+
+        // Initializing
         World world = screen.getWorld();
-        TiledMap map = screen.getMap();
 
         fdef = new FixtureDef();
         bdef = new BodyDef();
@@ -58,7 +56,7 @@ public abstract class InteractiveTileObject {
         bdef.type = BodyDef.BodyType.StaticBody;
         body = world.createBody(bdef);
 
-        shape = createPolyline((PolygonMapObject) object);
+        ChainShape shape = createPolyline((PolygonMapObject) object);
         fdef.shape = shape;
         fdef.restitution = 1;
         fixture = body.createFixture(fdef);
@@ -67,11 +65,11 @@ public abstract class InteractiveTileObject {
 
     private static ChainShape createPolyline(PolygonMapObject polyline) {
         float[] vertices = polyline.getPolygon().getTransformedVertices();
-        Vector2[] worldvertices = new Vector2[vertices.length/2];
-        for(int i=0; i<worldvertices.length; i++)
-            worldvertices[i] = new Vector2(vertices[i*2] / Main.PPM, vertices[i*2+1] / Main.PPM);
+        Vector2[] worldVertices = new Vector2[vertices.length/2];
+        for(int i=0; i<worldVertices.length; i++)
+            worldVertices[i] = new Vector2(vertices[i*2] / Main.PPM, vertices[i*2+1] / Main.PPM);
         ChainShape chainShape = new ChainShape();
-        chainShape.createChain(worldvertices);
+        chainShape.createChain(worldVertices);
 
         return chainShape;
     }
@@ -88,7 +86,7 @@ public abstract class InteractiveTileObject {
         return layer.getCell((int)(body.getPosition().x * Main.PPM / 16), (int)(body.getPosition().y * Main.PPM / 16));
     }
 
-    public FixtureDef getFixtureDef() {
+    /*public FixtureDef getFixtureDef() {
         return fdef;
-    }
+    }*/
 }

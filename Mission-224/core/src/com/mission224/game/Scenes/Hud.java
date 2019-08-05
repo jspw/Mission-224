@@ -15,28 +15,25 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mission224.game.Main;
 
 public class Hud implements Disposable {
+
     public Stage stage;
-    private Viewport viewport;
 
-    private Integer worldTimer;
+    public static Integer worldTimer = 300;
     private float timeCount;
-
-    Label countdownLabel;
-    Label timeLabel;
-    Label levelLabel;
-    Label gameLabel;
-    Label blankLabel;
+    private Label countdownLabel;
+    private Label levelLabel;
 
     public Hud(SpriteBatch sb) {
+
         worldTimer = 300;
         timeCount = 0;
 
-        viewport = new FitViewport(Main.V_WIDTH, Main.V_HEIGHT, new OrthographicCamera());
+        Viewport viewport = new FitViewport(Main.V_WIDTH, Main.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
-        Table tabel = new Table();
-        tabel.top();
-        tabel.setFillParent(true);
+        Table table = new Table();
+        table.top();
+        table.setFillParent(true);
 
         /*// Bitmap Font
         timeLabel = new Label("Time: ", new Label.LabelStyle(new BitmapFont(), Color.BROWN));
@@ -45,11 +42,11 @@ public class Hud implements Disposable {
         gameLabel = new Label("Level: ", new Label.LabelStyle(new BitmapFont(), Color.BROWN));
         levelLabel = new Label("1", new Label.LabelStyle(new BitmapFont(), Color.BROWN));
 
-		tabel.add(gameLabel).expandX().padTop(10);
-		tabel.add(levelLabel).expandX();
-		tabel.row();
-		tabel.add(timeLabel).expandX().padTop(10);
-		tabel.add(countdownLabel).expandX();*/
+		table.add(gameLabel).expandX().padTop(10);
+		table.add(levelLabel).expandX();
+		table.row();
+		table.add(timeLabel).expandX().padTop(10);
+		table.add(countdownLabel).expandX();*/
 
 		// FreeType Font
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/ALGER.TTF"));
@@ -66,30 +63,31 @@ public class Hud implements Disposable {
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
 		labelStyle.font = font;
 
-		gameLabel = new Label("    Level :  ", labelStyle);
-		levelLabel = new Label("1", labelStyle);
-		timeLabel = new Label("  Time :  ", labelStyle);
+		Label gameLabel = new Label("    Life :  ", labelStyle);
+		levelLabel = new Label("15", labelStyle);
+		Label timeLabel = new Label("  Time :  ", labelStyle);
 		countdownLabel = new Label(String.format("%05d    ", worldTimer), labelStyle);
-		blankLabel = new Label(" ", labelStyle);
+		Label blankLabel = new Label(" ", labelStyle);
 
-		tabel.add(gameLabel).padTop(15);
-		tabel.add(levelLabel).padTop(15);
-		tabel.add(blankLabel).expandX();
-		tabel.add(timeLabel).padTop(15);
-		tabel.add(countdownLabel).padTop(15);
+		table.add(gameLabel).padTop(15);
+		table.add(levelLabel).padTop(15);
+		table.add(blankLabel).expandX();
+		table.add(timeLabel).padTop(15);
+		table.add(countdownLabel).padTop(15);
 
 		// Add the table to stage
-        stage.addActor(tabel);
+        stage.addActor(table);
     }
 
-    public void update(float dt) {
+    public void update(float dt, int life) {
 		timeCount += dt;
 		if(timeCount >= 1) {
 			worldTimer--;
-
 			countdownLabel.setText(String.format("%05d    ", worldTimer));
 			timeCount = 0;
 		}
+
+		levelLabel.setText(life);
 	}
 
 	@Override

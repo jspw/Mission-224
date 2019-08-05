@@ -1,0 +1,61 @@
+
+Player_Idle.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+1_terrorist_1_Idle
+  rotate: false
+  xy: 0, 0
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 0
+1_terrorist_1_Idle
+  rotate: false
+  xy: 50, 0
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 1
+1_terrorist_1_Idle
+  rotate: false
+  xy: 100, 0
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 2
+1_terrorist_1_Idle
+  rotate: false
+  xy: 150, 0
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 3
+1_terrorist_1_Idle
+  rotate: false
+  xy: 200, 0
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 4
+1_terrorist_1_Idle
+  rotate: false
+  xy: 250, 0
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 5
+1_terrorist_1_Idle
+  rotate: false
+  xy: 300, 0
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 6
+1_terrorist_1_Idle
+  rotate: false
+  xy: 350, 0
+  size: 50, 110
+  orig: 50, 110
+  offset: 0, 0
+  index: 7

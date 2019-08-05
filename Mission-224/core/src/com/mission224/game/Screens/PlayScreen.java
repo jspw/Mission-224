@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -16,7 +17,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mission224.game.Main;
 import com.mission224.game.Scenes.Hud;
-import com.mission224.game.Sprites.Bullets;
+import com.mission224.game.Sprites.Enemies.SmallFries1;
+import com.mission224.game.Sprites.TileObjects.EnemyDetectionArea;
+import com.mission224.game.Tools.Bullets;
 import com.mission224.game.Sprites.Enemies.Enemy;
 import com.mission224.game.Sprites.Player;
 import com.mission224.game.Tools.B2WorldCreator;
@@ -24,14 +27,15 @@ import com.mission224.game.Tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
 
+    public static boolean playAgain;
+    private float playAgainTimer;
+
     // Screen Variables
-    private Main game;
     private OrthographicCamera gameCam;
     private Hud hud;
     private Viewport gamePort;
 
     // Tiled map variables
-    private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
 
@@ -42,31 +46,28 @@ public class PlayScreen implements Screen {
 
     // Player variables
     private Player player;
-    private TextureAtlas atlas;
+    private Main game;
     public static boolean canJump;
 
-
     // Music Variables
-    public static  Music music;
-
-    // Project Path
-    private String projectDir = System.getProperty("user.dir") + "/";
-
+    private static  Music music;
+    private static  Sound fireSound;
 
     public PlayScreen(Main game) {
 
-        atlas = new TextureAtlas("CharactersFiles/Player.pack");
-
         this.game = game;
+
         gameCam = new OrthographicCamera(Main.V_WIDTH, Main.V_HEIGHT);
         gamePort = new FitViewport(Main.V_WIDTH / Main.PPM, Main.V_HEIGHT / Main.PPM, gameCam);
-        hud = new Hud(game.batch);
+        hud = new Hud(Main.batch);
 
         canJump = true;
+        playAgainTimer = 0;
 
         // Map Loader:
-        mapLoader = new TmxMapLoader();
-        map = mapLoader.load(projectDir + "Maps/Level1.tmx");
+        TmxMapLoader mapLoader = new TmxMapLoader();
+        //map = mapLoader.load(System.getProperty("user.dir") + "/" + "Maps/Level0.tmx");
+        map = mapLoader.load("Maps/Level1.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1/ Main.PPM);
 
         // GameCam centralized
@@ -88,11 +89,10 @@ public class PlayScreen implements Screen {
         // Adding Background Music
         music = Main.manager.get("Audio/Musics/Background_music_for_level_1.mp3", Music.class);
         music.setLooping(true);
-        //music.play();
-    }
+        music.play();
 
-    public TextureAtlas getAtlas() {
-        return atlas;
+        // Adding bullet sound effect
+        fireSound = Main.manager.get("Audio/SoundEffects/gun.wav", Sound.class);
     }
 
     @Override
@@ -101,30 +101,11 @@ public class PlayScreen implements Screen {
     }
 
     // Handling User Inputs
-    public void handleInput(float dt) {
-
-        /*if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-            gameCam.position.x += 100 * dt;
-
-        }
-
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            gameCam.position.x -= 100 * dt;
-
-        }*/
-
-        /*if(Gdx.input.isTouched()) {
-            int x = Gdx.input.getX();
-            int y = Gdx.input.getY();
-            if(x <= 500)
-                player.b2body.applyLinearImpulse(new Vector2(0f ,0.5f), player.b2body.getWorldCenter(), true);
-            else
-                player.b2body.applyLinearImpulse(new Vector2(0.1f ,0), player.b2body.getWorldCenter(), true);
-        }*/
+    private void handleInput() {
 
         // Jump
         if((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) && canJump) {
-            player.b2body.applyLinearImpulse(new Vector2(0 ,5f), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(0 ,4.2f), player.b2body.getWorldCenter(), true);
             canJump = false;
         }
 
@@ -138,8 +119,8 @@ public class PlayScreen implements Screen {
             player.b2body.applyLinearImpulse(new Vector2(1f ,0), player.b2body.getWorldCenter(), true);
         }
 
-        // Bullets
-        if(Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+        // Bullet
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && player.getFiringDelay() > 0.5f) {
             float bulletX = player.b2body.getPosition().x;
             float bulletY = player.b2body.getPosition().y;
 
@@ -147,15 +128,17 @@ public class PlayScreen implements Screen {
             else bulletX -= .3f;
 
             player.bullets.add(new Bullets(this, bulletX, bulletY, player.runningRight));
+            fireSound.play();
         }
     }
 
+    private void update(float dt) {
 
-
-    public void update(float dt) {
+        // To go back to menu after players's death
+        updatePlayAgain(dt);
 
         // Handle user input
-        handleInput(dt);
+        handleInput();
 
         // Updating bodies to the world
         world.step(1 / 60f, 6, 2);
@@ -164,19 +147,23 @@ public class PlayScreen implements Screen {
         player.update(dt);
 
 
-        for(Enemy enemy:creator.getSmallFries1Array())
-            enemy.update(dt);
+        for(Enemy enemy:creator.getSmallFries1Array()) enemy.update(dt);
 
         // Hud Update
-        hud.update(dt);
+        hud.update(dt, player.heathStatus());
 
         // Attach gameCam to the Player co-ordinate
         if(player.b2body.getPosition().x > 5f && player.b2body.getPosition().x < 74f)
             gameCam.position.x = player.b2body.getPosition().x;
-        //System.out.println(player.b2body.getPosition().x);
 
         gameCam.update();
         mapRenderer.setView(gameCam);
+
+        // Back to Menu
+        if(playAgain || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            dispose();
+            game.setScreen(new Menu(game));
+        }
     }
 
     @Override
@@ -186,33 +173,41 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        Main.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
         // Map Render
         mapRenderer.render();
 
         // Box2DDebug Render
-        b2dr.render(world, gameCam.combined);
+        //b2dr.render(world, gameCam.combined);
 
-        game.batch.setProjectionMatrix(gameCam.combined);
-        game.batch.begin();
+        Main.batch.setProjectionMatrix(gameCam.combined);
+        Main.batch.begin();
 
 	    // Rendering Player
-        player.draw(game.batch);
+        player.draw(Main.batch);
 
         // Rendering Bullets
         for (Bullets bullet : player.bullets) {
-            bullet.draw(game.batch);
+            bullet.draw(Main.batch);
         }
 
         // Rendering Enemies
         for(Enemy enemy : creator.getSmallFries1Array()) {
-            enemy.draw(game.batch);
-            if(enemy.getX() < player.getX() + 1600 / Main.PPM)
-                enemy.b2body.setActive(true);
+            enemy.draw(Main.batch);
+            //if(enemy.getX() < player.getX() + 800 / Main.PPM && !enemy.dead()) enemy.b2body.setActive(true);
+            //if(enemy.getX() < player.getX() - 800 / Main.PPM && !enemy.dead()) enemy.b2body.setActive(false);
+            if(!enemy.dead() && enemy.isDetect()) {
+                if((player.getX() < enemy.getX()) && !enemy.isFlipX()) {
+                    enemy.reverseVelocity(true, false);
+                }
+                if((player.getX() > enemy.getX()) && enemy.isFlipX()) {
+                    enemy.reverseVelocity(true, false);
+                }
+            }
         }
 
-        game.batch.end();
+        Main.batch.end();
 
         // Hud Render
         hud.stage.draw();
@@ -231,6 +226,13 @@ public class PlayScreen implements Screen {
         return world;
     }
 
+    private void updatePlayAgain(float delta) {
+        if(player.heathStatus() <= 0){
+            playAgainTimer += delta;
+            if(playAgainTimer > 1.2f)
+                playAgain = true;
+        }
+    }
 
     @Override
     public void pause() {
@@ -249,11 +251,14 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
+        System.out.println("I am disposing playscreen");
         map.dispose();
-        mapRenderer.dispose();
         b2dr.dispose();
-        world.dispose();
-        hud.stage.dispose();
+        hud.dispose();
         music.dispose();
+        fireSound.dispose();
+
+        world.dispose();
+        //mapRenderer.dispose();
     }
 }

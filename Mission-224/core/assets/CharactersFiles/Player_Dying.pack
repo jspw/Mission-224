@@ -1,0 +1,68 @@
+
+Player_Dying.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 0, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 0
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 110, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 1
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 220, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 2
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 330, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 3
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 440, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 4
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 550, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 5
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 660, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 6
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 770, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 7
+1_terrorist_1_Hurt
+  rotate: false
+  xy: 880, 0
+  size: 110, 110
+  orig: 110, 110
+  offset: 0, 0
+  index: 8
