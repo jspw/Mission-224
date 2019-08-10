@@ -1,4 +1,4 @@
-package com.mission224.game.Tools;
+package com.mission224.game.tools;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.mission224.game.Main;
-import com.mission224.game.Screens.PlayScreen;
+import com.mission224.game.screens.PlayScreen;
 
 public class Bullets  extends Sprite implements Disposable {
 

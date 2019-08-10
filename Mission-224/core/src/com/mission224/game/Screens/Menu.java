@@ -1,8 +1,9 @@
-package com.mission224.game.Screens;
+package com.mission224.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,6 +36,7 @@ public class Menu implements Screen {
 	private float elapsedTime;
 	private int bal;
 	private int x, y, timer;
+	private static Music music;
 
 	private Label label, label2, label3, label4, label5;
 	private Label helpPanel, missionPanel, creditPanel;
@@ -60,8 +62,8 @@ public class Menu implements Screen {
 		mission = false;
 		help = false;
 
-		bg = new Texture("Menu/background.jpg");
-		p1 = new Texture("Menu/NewLogo.png");
+		bg = new Texture("Menu/background.png");
+		p1 = new Texture("Menu/newLogo.png");
 		effect = new Texture("Menu/Buttons/effect.png");
 		pane = new Texture("Menu/Buttons/Panel.png");
 		buttonTex = new Texture("Menu/Buttons/button.png");
@@ -96,13 +98,17 @@ public class Menu implements Screen {
 		labelStyle.fontColor = Color.BLUE;*/
 
 		label = new Label("PLAY", labelStyle);
-		label2 = new Label("MISSION", labelStyle);
+		label2 = new Label("OBJECTIVE", labelStyle);
 		label3 = new Label("HELP", labelStyle);
 		label4 = new Label("CREDIT", labelStyle);
 		label5 = new Label("EXIT", labelStyle);
 
-		helpPanel = new Label("A or Left-Arrow  =  Move Left\nD or Right-Arrow  =  Movie Right\nSPACE or Up-Arrow  =  Jump\nLeft-Click  =  Shoot", labelStyle);
-		missionPanel = new Label("To be added", labelStyle);
+		helpPanel = new Label("A or Left-Arrow  =  Move Left\nD or Right-Arrow  =  Movie Right\nSPACE or Up-Arrow  =  Jump\nLeft-Click  =  Shoot\nESC  =  Pause", labelStyle);
+		missionPanel = new Label("Your score is determined by the multiplication\n" +
+				"of TIME LEFT, YOUR HEALTH and THE NUMBER OF\n" +
+				"ENEMIES YOU KILLED.\nYour objective is to loot the chest at the end of\n" +
+				"the map and make a HIGH score.\nYou have to kill at least 7 ENEMIES to clear the\n" +
+				"objective. (R.E. = Remaining Enemies.)", labelStyle);
 		creditPanel = new Label("Project of SWE-224 By\nShahriar Elahi Dhruvo\nReg No: 2017831060\n\nMehedi Hasan Shifat\nReg No: 2017831017", labelStyle);
 
 		label.setFontScale(1f,0.8f);
@@ -110,6 +116,11 @@ public class Menu implements Screen {
 		label3.setFontScale(1f,0.8f);
 		label4.setFontScale(1f,0.8f);
 		label5.setFontScale(1f, 0.8f);
+
+		// Adding Background Music
+		music = Main.manager.get("Audio/Musics/Background_music_for_Menu.mp3", Music.class);
+		music.setLooping(true);
+		music.play();
 	}
 
 	@Override
@@ -144,8 +155,7 @@ public class Menu implements Screen {
 			Main.batch.draw(buttonTex,50,400);
 			label.setPosition(95,402);
             label.draw(Main.batch,1);
-
-            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX() >= 50 && Gdx.input.getX() <= 198 && Gdx.input.getY() >= 155 && Gdx.input.getY() <= 196){
+			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX() >= 50 && Gdx.input.getX() <= 198 && Gdx.input.getY() >= 155 && Gdx.input.getY() <= 196){
                 Main.batch.draw(effect,50,395);
 				label.setPosition(95,400);
                 label.draw(Main.batch,1);
@@ -156,17 +166,17 @@ public class Menu implements Screen {
 				credit = false;
 
                 // Create game screen
-				dispose();
 				game.setScreen(new PlayScreen(game));
+				dispose();
 			}
 
             // Missions button
 			Main.batch.draw(buttonTex,50,320);
-			label2.setPosition(73,321);
+			label2.setPosition(62,321);
 			label2.draw(Main.batch,1);
 			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && Gdx.input.getX() >= 50 && Gdx.input.getX() <= 198 && Gdx.input.getY() >= 235 && Gdx.input.getY() <= 283){
 				Main.batch.draw(effect,50,315);
-				label2.setPosition(73,319);
+				label2.setPosition(62,319);
 				label2.draw(Main.batch,1);
 				mission = true;
 				play = false;
@@ -222,15 +232,15 @@ public class Menu implements Screen {
 			// Panel setup
 			if(help){
 				Main.batch.draw(pane,420,80);
-				helpPanel.setColor(Color.LIGHT_GRAY);
 				helpPanel.setFontScale(0.8f);
-				helpPanel.setPosition(500,120);
+				helpPanel.setColor(Color.CYAN);
+				helpPanel.setPosition(500,100);
 				helpPanel.draw(Main.batch,1);
 			}
 			if(credit){
 				Main.batch.draw(pane,420,80);
-				creditPanel.setColor(Color.LIGHT_GRAY);
 				creditPanel.setFontScale(.8f);
+				creditPanel.setColor(Color.CYAN);
 				creditPanel.setPosition(500,80);
 				creditPanel.draw(Main.batch,1);
 
@@ -253,8 +263,9 @@ public class Menu implements Screen {
 			}
 			if(mission){
 				Main.batch.draw(pane,420,80);
-				helpPanel.setColor(Color.LIGHT_GRAY);
-				missionPanel.setPosition(420,80);
+				missionPanel.setFontScale(.7f);
+				missionPanel.setColor(Color.CYAN);
+				missionPanel.setPosition(445,60);
 				missionPanel.draw(Main.batch,1);
 			}
         }
@@ -286,11 +297,13 @@ public class Menu implements Screen {
 
 	@Override
 	public void dispose() {
-		//System.out.println("yO MENU is working");
+		//System.out.println("I am disposing Menu");
 		buttonTex.dispose();
 		bg.dispose();
 		p1.dispose();
 		effect.dispose();
 		pane.dispose();
+		fb.dispose();
+		music.stop();
 	}
 }

@@ -1,4 +1,4 @@
-package com.mission224.game.Scenes;
+package com.mission224.game.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -13,20 +13,32 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mission224.game.Main;
+import com.mission224.game.screens.PlayScreen;
 
 public class Hud implements Disposable {
 
     public Stage stage;
 
-    public static Integer worldTimer = 300;
+    public static Integer score;
+    public static Integer worldTimer = 120;
+    private Integer remainingEnemies;
+    public static int deadEnemies;
+	public static boolean objectiveCleared;
+	public static boolean timeUp;
     private float timeCount;
     private Label countdownLabel;
     private Label levelLabel;
+	private Label scoreLabel;
 
     public Hud(SpriteBatch sb) {
 
-        worldTimer = 300;
+		objectiveCleared = false;
+		timeUp = false;
+		remainingEnemies = 11;
+    	worldTimer = 120;
+        deadEnemies = 0;
         timeCount = 0;
+        score = 0;
 
         Viewport viewport = new FitViewport(Main.V_WIDTH, Main.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
@@ -67,11 +79,11 @@ public class Hud implements Disposable {
 		levelLabel = new Label("15", labelStyle);
 		Label timeLabel = new Label("  Time :  ", labelStyle);
 		countdownLabel = new Label(String.format("%05d    ", worldTimer), labelStyle);
-		Label blankLabel = new Label(" ", labelStyle);
+		scoreLabel = new Label(String.format("       R.E.: %d", remainingEnemies), labelStyle);
 
 		table.add(gameLabel).padTop(15);
 		table.add(levelLabel).padTop(15);
-		table.add(blankLabel).expandX();
+		table.add(scoreLabel).padTop(15).expandX();
 		table.add(timeLabel).padTop(15);
 		table.add(countdownLabel).padTop(15);
 
@@ -83,10 +95,18 @@ public class Hud implements Disposable {
 		timeCount += dt;
 		if(timeCount >= 1) {
 			worldTimer--;
+			if(worldTimer <= 0) {
+				timeUp = true;
+				PlayScreen.playAgain = true;
+			}
+			score = worldTimer*(deadEnemies*150)+(life*50);
+			if(score <= 1000) score = 0;
+			if(objectiveCleared) score += 10000;
 			countdownLabel.setText(String.format("%05d    ", worldTimer));
+			scoreLabel.setText(String.format("       R.E.: %d", remainingEnemies-deadEnemies));
 			timeCount = 0;
 		}
-
+		if(life <= 0) life = 0;
 		levelLabel.setText(life);
 	}
 

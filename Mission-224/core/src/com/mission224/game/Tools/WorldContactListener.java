@@ -1,14 +1,14 @@
-package com.mission224.game.Tools;
+package com.mission224.game.tools;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.mission224.game.Sprites.Enemies.Enemy;
-import com.mission224.game.Sprites.Enemies.SmallFries1;
-import com.mission224.game.Sprites.Player;
-import com.mission224.game.Sprites.TileObjects.InteractiveTileObject;
+import com.mission224.game.sprites.enemies.Enemy;
+import com.mission224.game.sprites.enemies.SmallFries1;
+import com.mission224.game.sprites.Player;
 import com.mission224.game.Main;
-import com.mission224.game.Sprites.TileObjects.Traps;
+import com.mission224.game.sprites.tileObjects.Traps;
+import com.mission224.game.treasure.GiantChest;
 
-import static com.mission224.game.Sprites.Enemies.SmallFries1.detect;
+import static com.mission224.game.sprites.enemies.SmallFries1.detect;
 
 public class WorldContactListener implements ContactListener {
 
@@ -106,21 +106,34 @@ public class WorldContactListener implements ContactListener {
                     ((Player) fixB.getUserData()).playerBulletHit();
                     ((Traps) fixA.getUserData()).onSideHit();
                 }
+                SmallFries1.playerEnemyCollision = true;
                 break;
 
             case Main.PLAYER_BIT | Main.PLAYER_DETECTION_BIT :
 
+                SmallFries1.playerEnemyCollision = true;
                 detect = true;
                 break;
 
-            case Main.PLAYER_BIT | Main.GROUND_BIT :
-                SmallFries1.playerEnemyCollision = false;
+            case Main.PLAYER_BIT | Main.TREASURE_BIT :
+
+                if(fixA.getFilterData().categoryBits == Main.TREASURE_BIT) {
+                    ((GiantChest) fixA.getUserData()).onSideHit();
+                }
+                else {
+                    ((GiantChest) fixB.getUserData()).onSideHit();
+                }
                 break;
 
             case Main.ENEMY_BIT :
 
                 ((Enemy)fixA.getUserData()).reverseVelocity(true, false);
                 ((Enemy)fixB.getUserData()).reverseVelocity(true, false);
+                break;
+
+            case Main.PLAYER_BIT | Main.GROUND_BIT :
+            case Main.PLAYER_BIT | Main.OBJECT_BIT :
+                SmallFries1.playerEnemyCollision = false;
                 break;
         }
     }

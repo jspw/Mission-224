@@ -1,10 +1,10 @@
-package com.mission224.game.Sprites.TileObjects;
+package com.mission224.game.sprites.tileObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.mission224.game.Main;
-import com.mission224.game.Screens.PlayScreen;
-import com.mission224.game.Sprites.Enemies.SmallFries1;
+import com.mission224.game.screens.PlayScreen;
+import com.mission224.game.sprites.enemies.SmallFries1;
 
 public class EnemyDetectionArea extends InteractiveTileObject {
 

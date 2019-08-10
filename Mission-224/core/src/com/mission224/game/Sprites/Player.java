@@ -1,14 +1,15 @@
-package com.mission224.game.Sprites;
+package com.mission224.game.sprites;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.mission224.game.Main;
-import com.mission224.game.Screens.PlayScreen;
-import com.mission224.game.Tools.Bullets;
+import com.mission224.game.screens.PlayScreen;
+import com.mission224.game.tools.Bullets;
 
 import java.util.ArrayList;
 
@@ -29,7 +30,6 @@ public class Player extends Sprite {
     public boolean runningRight;
     private boolean shooting;
     private float firingDelay;
-    //private TextureRegion playerShooting;
 
     // Main Player bullets
     public ArrayList <Bullets> bullets;
@@ -156,6 +156,7 @@ public class Player extends Sprite {
             case JUMPING:
                 region = (TextureRegion) playerJump.getKeyFrame(stateTimer);
                 setBounds(getX(), getY(), PJ_WIDTH / Main.PPM, PJ_HEIGHT / Main.PPM);
+                PlayScreen.canJump = false;
                 break;
             case RUNNING:
                 region = (TextureRegion) playerRun.getKeyFrame(stateTimer, true);
@@ -168,10 +169,12 @@ public class Player extends Sprite {
                 //region = playerShooting;
                 region = (TextureRegion) playerAttack.getKeyFrame(stateTimer);
                 setBounds(getX(), getY(), PA_WIDTH / Main.PPM, PA_HEIGHT / Main.PPM);
+                PlayScreen.canJump = false;
                 break;
             case DYING:
                 region = (TextureRegion) dyingAnimation.getKeyFrame(stateTimer);
                 setBounds(getX(), getY(), PD_WIDTH / Main.PPM, PD_HEIGHT / Main.PPM);
+                PlayScreen.canJump = false;
                 break;
             case FALLING:
             case STANDING:
@@ -248,7 +251,7 @@ public class Player extends Sprite {
         fdef.filter.categoryBits = Main.PLAYER_BIT;
 
         // Which objects can collide with this object
-        fdef.filter.maskBits = Main.GROUND_BIT | Main.OBJECT_BIT | Main.TRAP_BIT | Main.PLAYER_DETECTION_BIT | Main.ENEMY_BULLET_BIT | Main.ENEMY_BIT;
+        fdef.filter.maskBits = Main.GROUND_BIT | Main.OBJECT_BIT | Main.TRAP_BIT | Main.PLAYER_DETECTION_BIT | Main.ENEMY_BULLET_BIT | Main.ENEMY_BIT | Main.TREASURE_BIT;
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
@@ -276,6 +279,7 @@ public class Player extends Sprite {
 
     public void playerBulletHit() {
         bulletHitCount++;
+        Main.manager.get("Audio/SoundEffects/Hurt.wav", Sound.class).play();
         if(bulletHitCount >= PLAYER_HEALTH) {
             setToDestroy = true;
         }

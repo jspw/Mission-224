@@ -1,4 +1,4 @@
-package com.mission224.game.Sprites.Enemies;
+package com.mission224.game.sprites.enemies;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -8,8 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.mission224.game.Main;
-import com.mission224.game.Screens.PlayScreen;
-import com.mission224.game.Tools.EnemyBullets;
+import com.mission224.game.scenes.Hud;
+import com.mission224.game.screens.PlayScreen;
+import com.mission224.game.tools.EnemyBullets;
 
 import java.util.ArrayList;
 
@@ -202,7 +203,7 @@ public class SmallFries1 extends Enemy {
 
         // Adding detection meter
         EdgeShape detectionLine = new EdgeShape();
-        detectionLine.set(new Vector2(80, 0).scl(1/Main.PPM), new Vector2(-80, 0).scl(1/Main.PPM));
+        detectionLine.set(new Vector2(80, 25).scl(1/Main.PPM), new Vector2(-80, 25).scl(1/Main.PPM));
         sdef.shape = detectionLine;
         sdef.filter.categoryBits = Main.PLAYER_DETECTION_BIT;
         sdef.isSensor = true;
@@ -234,6 +235,7 @@ public class SmallFries1 extends Enemy {
         bulletHitCount++;
         if(bulletHitCount > 1) {
             setToDestroy = true;
+            Hud.deadEnemies++;
         }
     }
 }

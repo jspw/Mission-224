@@ -1,4 +1,4 @@
-package com.mission224.game.Tools;
+package com.mission224.game.tools;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
@@ -7,9 +7,10 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.mission224.game.Main;
-import com.mission224.game.Screens.PlayScreen;
-import com.mission224.game.Sprites.Enemies.SmallFries1;
-import com.mission224.game.Sprites.TileObjects.*;
+import com.mission224.game.screens.PlayScreen;
+import com.mission224.game.sprites.enemies.SmallFries1;
+import com.mission224.game.sprites.tileObjects.Ground;
+import com.mission224.game.treasure.GiantChest;
 
 public class B2WorldCreator {
 
@@ -27,7 +28,7 @@ public class B2WorldCreator {
         // Creating Traps
         for(MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Traps(screen, rect);
+            new com.mission224.game.sprites.tileObjects.Traps(screen, rect);
         }
 
         // Creating Ground bodies & it's fixtures
@@ -38,19 +39,19 @@ public class B2WorldCreator {
 
         // Creating Wheels bodies & it's fixtures (Polygon)
         for(MapObject object : map.getLayers().get(8).getObjects().getByType(PolygonMapObject.class)) {
-            new Tire(screen, object);
+            new com.mission224.game.sprites.tileObjects.Tire(screen, object);
         }
 
         // Creating WaterPump bodies & it's fixtures
         for(MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new WaterPump(screen, rect);
+            new com.mission224.game.sprites.tileObjects.WaterPump(screen, rect);
         }
 
         // Enemy detection Area
         for(MapObject object : map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new EnemyDetectionArea(screen, rect);
+            new com.mission224.game.sprites.tileObjects.EnemyDetectionArea(screen, rect);
         }
 
         // Enemies are added
@@ -58,6 +59,12 @@ public class B2WorldCreator {
         for(MapObject object : map.getLayers().get(11).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             smallFries1Array.add(new SmallFries1(screen, rect.getX() / Main.PPM, rect.getY() / Main.PPM));
+        }
+
+        // Treasures are added
+        for(MapObject object : map.getLayers().get(12).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            new GiantChest(screen, rect);
         }
     }
 }

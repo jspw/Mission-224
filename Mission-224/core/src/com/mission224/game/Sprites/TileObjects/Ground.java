@@ -1,9 +1,9 @@
-package com.mission224.game.Sprites.TileObjects;
+package com.mission224.game.sprites.tileObjects;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mission224.game.Main;
-import com.mission224.game.Screens.PlayScreen;
+import com.mission224.game.screens.PlayScreen;
 
 public class Ground {
 

@@ -1,17 +1,16 @@
 // For detecting rectangle shape in map for collision
 
-package com.mission224.game.Sprites.TileObjects;
+package com.mission224.game.sprites.tileObjects;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mission224.game.Main;
-import com.mission224.game.Screens.PlayScreen;
+import com.mission224.game.screens.PlayScreen;
 
 public abstract class InteractiveTileObject {
 

@@ -1,39 +1,44 @@
-package com.mission224.game.Screens;
+package com.mission224.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mission224.game.Main;
-import com.mission224.game.Scenes.Hud;
-import com.mission224.game.Sprites.Enemies.SmallFries1;
-import com.mission224.game.Sprites.TileObjects.EnemyDetectionArea;
-import com.mission224.game.Tools.Bullets;
-import com.mission224.game.Sprites.Enemies.Enemy;
-import com.mission224.game.Sprites.Player;
-import com.mission224.game.Tools.B2WorldCreator;
-import com.mission224.game.Tools.WorldContactListener;
+import com.mission224.game.scenes.Hud;
+import com.mission224.game.tools.Bullets;
+import com.mission224.game.sprites.enemies.Enemy;
+import com.mission224.game.sprites.Player;
+import com.mission224.game.tools.B2WorldCreator;
+import com.mission224.game.tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
 
     public static boolean playAgain;
     private float playAgainTimer;
+    private float enemyDetectionDelay;
 
     // Screen Variables
     private OrthographicCamera gameCam;
     private Hud hud;
     private Viewport gamePort;
+    private Stage stage;
 
     // Tiled map variables
     private TiledMap map;
@@ -48,10 +53,12 @@ public class PlayScreen implements Screen {
     private Player player;
     private Main game;
     public static boolean canJump;
+    private boolean pauseScreen;
+    private float jumpDelay;
 
     // Music Variables
-    private static  Music music;
-    private static  Sound fireSound;
+    private static Music music;
+    private static Sound fireSound;
 
     public PlayScreen(Main game) {
 
@@ -62,7 +69,10 @@ public class PlayScreen implements Screen {
         hud = new Hud(Main.batch);
 
         canJump = true;
+        pauseScreen = false;
+        enemyDetectionDelay = 0;
         playAgainTimer = 0;
+        jumpDelay = 0;
 
         // Map Loader:
         TmxMapLoader mapLoader = new TmxMapLoader();
@@ -74,7 +84,7 @@ public class PlayScreen implements Screen {
         gameCam.position.set(gamePort.getWorldWidth()/2 + 0.25f, gamePort.getWorldHeight()/2, 0);
 
         // Box2D initialization
-        world = new World(new Vector2(0, -10), true);
+        world = new World(new Vector2(0, -30), true);
         b2dr =  new Box2DDebugRenderer();
 
         // Creating world
@@ -93,6 +103,34 @@ public class PlayScreen implements Screen {
 
         // Adding bullet sound effect
         fireSound = Main.manager.get("Audio/SoundEffects/gun.wav", Sound.class);
+
+        // Pause Screen
+        Viewport viewport = new FitViewport(Main.V_WIDTH, Main.V_HEIGHT, new OrthographicCamera());
+        stage = new Stage(viewport, Main.batch);
+
+        Table table = new Table();
+        table.top();
+        table.setFillParent(true);
+
+        // FreeType font generator
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Fonts/ALGER.TTF"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        parameter.borderWidth = 1;
+        parameter.color = Color.RED;
+        parameter.shadowOffsetX = 3;
+        parameter.shadowOffsetY = 3;
+        parameter.shadowColor = new Color(0, 0f, 0, 1);
+        BitmapFont font = generator.generateFont(parameter);
+        generator.dispose();
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = font;
+
+        Label pauseLabel = new Label("    Pause    ", labelStyle);
+
+        table.add(pauseLabel).center().expand();
+        stage.addActor(table);
     }
 
     @Override
@@ -104,9 +142,11 @@ public class PlayScreen implements Screen {
     private void handleInput() {
 
         // Jump
-        if((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) && canJump) {
-            player.b2body.applyLinearImpulse(new Vector2(0 ,4.2f), player.b2body.getWorldCenter(), true);
+        if((Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.UP)) && canJump && jumpDelay > 0.5f) {
+            if(player.runningRight) player.b2body.applyLinearImpulse(new Vector2(0.5f ,8), player.b2body.getWorldCenter(), true);
+            else player.b2body.applyLinearImpulse(new Vector2(-0.5f ,8), player.b2body.getWorldCenter(), true);
             canJump = false;
+            jumpDelay = 0;
         }
 
         // Right
@@ -134,83 +174,104 @@ public class PlayScreen implements Screen {
 
     private void update(float dt) {
 
-        // To go back to menu after players's death
-        updatePlayAgain(dt);
+        // Pause screen
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && !pauseScreen) {
+            pauseScreen = true;
+        }
+        else if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && pauseScreen) {
+            pauseScreen = false;
+        }
 
-        // Handle user input
-        handleInput();
+        if(!pauseScreen) {
 
-        // Updating bodies to the world
-        world.step(1 / 60f, 6, 2);
+            // To go back to menu after players's death
+            updatePlayAgain(dt);
 
-        // Update Player Position
-        player.update(dt);
+            // Handle user input
+            handleInput();
+
+            // Updating bodies to the world
+            world.step(1 / 60f, 6, 2);
+
+            // Update Player Position
+            player.update(dt);
 
 
-        for(Enemy enemy:creator.getSmallFries1Array()) enemy.update(dt);
+            for (Enemy enemy : creator.getSmallFries1Array()) enemy.update(dt);
 
-        // Hud Update
-        hud.update(dt, player.heathStatus());
+            // Hud Update
+            hud.update(dt, player.heathStatus());
 
-        // Attach gameCam to the Player co-ordinate
-        if(player.b2body.getPosition().x > 5f && player.b2body.getPosition().x < 74f)
-            gameCam.position.x = player.b2body.getPosition().x;
+            // Attach gameCam to the Player co-ordinate
+            if (player.b2body.getPosition().x > 5f && player.b2body.getPosition().x < 74f)
+                gameCam.position.x = player.b2body.getPosition().x;
 
-        gameCam.update();
-        mapRenderer.setView(gameCam);
+            gameCam.update();
+            mapRenderer.setView(gameCam);
 
-        // Back to Menu
-        if(playAgain || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            dispose();
-            game.setScreen(new Menu(game));
+            // Back to Menu
+            if (playAgain) {
+                game.setScreen(new DeadScreen(game));
+                music.stop();
+                fireSound.stop();
+                dispose();
+            }
+            jumpDelay += dt;
+            enemyDetectionDelay += dt;
         }
     }
 
     @Override
     public void render(float delta) {
 
-        update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        update(delta);
 
-        Main.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        if(!pauseScreen) {
+            Main.batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
-        // Map Render
-        mapRenderer.render();
+            // Map Render
+            mapRenderer.render();
 
-        // Box2DDebug Render
-        //b2dr.render(world, gameCam.combined);
+            // Box2DDebug Render
+            //b2dr.render(world, gameCam.combined);
 
-        Main.batch.setProjectionMatrix(gameCam.combined);
-        Main.batch.begin();
+            Main.batch.setProjectionMatrix(gameCam.combined);
+            Main.batch.begin();
 
-	    // Rendering Player
-        player.draw(Main.batch);
+            // Rendering Player
+            player.draw(Main.batch);
 
-        // Rendering Bullets
-        for (Bullets bullet : player.bullets) {
-            bullet.draw(Main.batch);
-        }
+            // Rendering Bullets
+            for (Bullets bullet : player.bullets) {
+                bullet.draw(Main.batch);
+            }
 
-        // Rendering Enemies
-        for(Enemy enemy : creator.getSmallFries1Array()) {
-            enemy.draw(Main.batch);
-            //if(enemy.getX() < player.getX() + 800 / Main.PPM && !enemy.dead()) enemy.b2body.setActive(true);
-            //if(enemy.getX() < player.getX() - 800 / Main.PPM && !enemy.dead()) enemy.b2body.setActive(false);
-            if(!enemy.dead() && enemy.isDetect()) {
-                if((player.getX() < enemy.getX()) && !enemy.isFlipX()) {
-                    enemy.reverseVelocity(true, false);
-                }
-                if((player.getX() > enemy.getX()) && enemy.isFlipX()) {
-                    enemy.reverseVelocity(true, false);
+            // Rendering Enemies
+            for (Enemy enemy : creator.getSmallFries1Array()) {
+                enemy.draw(Main.batch);
+                //if(enemy.getX() < player.getX() + 800 / Main.PPM && !enemy.dead()) enemy.b2body.setActive(true);
+                //if(enemy.getX() < player.getX() - 800 / Main.PPM && !enemy.dead()) enemy.b2body.setActive(false);
+                if (!enemy.dead() && enemy.isDetect()) {
+                    if ((player.getX() < enemy.getX()) && !enemy.isFlipX() && enemyDetectionDelay > 0.5f) {
+                        enemy.reverseVelocity(true, false);
+                        enemyDetectionDelay = 0;
+                    }
+                    if ((player.getX() > enemy.getX()) && enemy.isFlipX() && enemyDetectionDelay > 0.5f) {
+                        enemy.reverseVelocity(true, false);
+                        enemyDetectionDelay = 0;
+                    }
                 }
             }
+
+            Main.batch.end();
+
+            // Hud Render
+            hud.stage.draw();
         }
-
-        Main.batch.end();
-
-        // Hud Render
-        hud.stage.draw();
+        // Pause screen
+        else stage.draw();
     }
 
     @Override
@@ -229,7 +290,7 @@ public class PlayScreen implements Screen {
     private void updatePlayAgain(float delta) {
         if(player.heathStatus() <= 0){
             playAgainTimer += delta;
-            if(playAgainTimer > 1.2f)
+            if(playAgainTimer > 1f)
                 playAgain = true;
         }
     }
@@ -251,13 +312,10 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-        System.out.println("I am disposing playscreen");
+        //System.out.println("I am disposing playScreen");
+        hud.dispose();
         map.dispose();
         b2dr.dispose();
-        hud.dispose();
-        music.dispose();
-        fireSound.dispose();
-
         world.dispose();
         //mapRenderer.dispose();
     }
