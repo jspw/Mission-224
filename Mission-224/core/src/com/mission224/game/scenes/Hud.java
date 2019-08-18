@@ -99,9 +99,9 @@ public class Hud implements Disposable {
 				timeUp = true;
 				PlayScreen.playAgain = true;
 			}
-			score = worldTimer*(deadEnemies*150)+(life*50);
+			score = (worldTimer*100)+(deadEnemies*150)+(life*50);
 			if(score <= 1000) score = 0;
-			if(objectiveCleared) score += 10000;
+			if(objectiveCleared) score += 1000;
 			countdownLabel.setText(String.format("%05d    ", worldTimer));
 			scoreLabel.setText(String.format("       R.E.: %d", remainingEnemies-deadEnemies));
 			timeCount = 0;

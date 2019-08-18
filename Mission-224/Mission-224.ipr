@@ -70,10 +70,20 @@
   <component name="SvnBranchConfigurationManager">
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+  </component>
   <component name="libraryTable">
     <library name="core.core-1.0">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/core/build/libs/core-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="desktop.desktop-1.0">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/desktop/build/libs/desktop-1.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

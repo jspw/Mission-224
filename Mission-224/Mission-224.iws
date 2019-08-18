@@ -6,7 +6,42 @@
     </shared>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b11d1bd1-7ddf-4f6a-8531-d3e15f884a4e" name="Default Changelist" comment="" />
+    <list default="true" id="b11d1bd1-7ddf-4f6a-8531-d3e15f884a4e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/../LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mission-224.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/Mission-224.ipr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mission-224.iws" beforeDir="false" afterPath="$PROJECT_DIR$/Mission-224.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/Level1.tmx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/Level1.tmx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/Building.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/Building.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/GiantChest.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/GiantChest.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/Mountain.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/Mountain.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/UnderGround.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/UnderGround.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/boxescontainer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/boxescontainer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/clouds_2.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/clouds_2.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/sky.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/sky.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/spike.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/spike.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/wheelshydrant.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/android/assets/Maps/TilesetsAndImages/wheelshydrant.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Scenes/Hud.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Screens/Menu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Screens/PlayScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/Enemies/Enemy.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/Enemies/SmallFries1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/Player.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/TileObjects/EnemyDetectionArea.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/TileObjects/Ground.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/TileObjects/InteractiveTileObject.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/TileObjects/Tire.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/TileObjects/Traps.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Sprites/TileObjects/WaterPump.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Tools/B2WorldCreator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Tools/Bullets.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Tools/EnemyBullets.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/com/mission224/game/Tools/WorldContactListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,6 +117,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ModuleEditorState">
     <option name="LAST_EDITED_MODULE_NAME" />
     <option name="LAST_EDITED_TAB_NAME" />
@@ -92,6 +130,7 @@
       <profile-state />
     </entry>
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
@@ -102,6 +141,7 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.sorted" value="false" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="device.picker.selection" value="938bcac8" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/android/assets" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -227,6 +267,17 @@
       <updated>1564804172189</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
